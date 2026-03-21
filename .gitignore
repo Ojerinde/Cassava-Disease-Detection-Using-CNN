@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+cassava_venv/
+cassava_model_venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp
+.next/
+out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Model files
+*.h5
+*.keras
+models/cassava_model.keras
+models/class_indices.json
+models/phase*.png
+models/phase*.csv
+models/*.pkl
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Data (if stored locally)
+data/
+*.zip
+backend/venv/
+backend/.env
+backend/predictions.db
+model/models/*.pkl
+model/models/*.pth
+model/models/classes.json
+model/models/metrics.json
+frontend/.env
+frontend/.env.local
+frontend/.vercel
+frontend/node_modules/
