@@ -23,13 +23,6 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Virtual environments
-venv/
-env/
-ENV/
-.venv
-cassava_venv/
-cassava_model_venv/
 
 # IDE
 .vscode/
@@ -47,35 +40,14 @@ yarn-error.log
 .next/
 out/
 
-# Environment
-.env
-.env.local
-.env.*.local
 
-# Model files
-*.h5
-*.keras
-models/cassava_model.keras
-models/class_indices.json
-models/phase*.png
-models/phase*.csv
-models/*.pkl
-
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb
-
-# Data (if stored locally)
+# Data and Models
 data/
 *.zip
 backend/venv/
-backend/.env
 backend/predictions.db
-model/models/*.pkl
+model\models\phase1_checkpoint.pkl
+model\models\phase2_checkpoint.pkl
 model/models/*.pth
-model/models/classes.json
-model/models/metrics.json
-frontend/.env
-frontend/.env.local
-frontend/.vercel
+frontend/.env.local.example
 frontend/node_modules/

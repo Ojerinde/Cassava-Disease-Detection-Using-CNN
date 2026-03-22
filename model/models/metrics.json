@@ -1,0 +1,7 @@
+{
+  "accuracy": 0.8709979057312012,
+  "error_rate": 0.12900209426879883,
+  "tta_accuracy": 0.8738023042678833,
+  "tta_error_rate": 0.1261976957321167,
+  "model_arch": "convnext_small_in22k"
+}
