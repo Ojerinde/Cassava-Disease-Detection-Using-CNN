@@ -1,10 +1,12 @@
 Cassava Guard — Cassava Leaf Disease Classification
 
 Overview
+
 - End-to-end system for cassava leaf disease diagnosis using a ConvNeXt-based FastAI model, a FastAPI backend, and a Next.js frontend.
 - Supports upload of JPG/PNG images, returns predicted disease with confidence and actionable recommendations, and records predictions in SQLite for analytics.
 
 Quick Start
+
 - Prerequisites
   - Python 3.10+ (3.13 tested)
   - Node.js 18+ and npm
@@ -13,7 +15,7 @@ Quick Start
 
 - Clone and set up
   - Fork this repository on GitHub and clone your fork:
-    - git clone https://github.com/<your-username>/cassava-project.git
+    - git clone https://github.com/Ojerinde/Cassava-Disease-Detection-Using-CNN.git
     - cd cassava-project
   - Create and activate a Python virtual environment:
     - Windows PowerShell: python -m venv venv; .\venv\Scripts\Activate.ps1
@@ -25,11 +27,11 @@ Quick Start
   - Option A: Train locally (requires dataset)
     - Prepare the dataset as image folders under data/:
       - data/
-        - Cassava___bacterial_blight/
-        - Cassava___brown_streak_disease/
-        - Cassava___green_mottle/
-        - Cassava___healthy/
-        - Cassava___mosaic_disease/
+        - Cassava\_\_\_bacterial_blight/
+        - Cassava\_\_\_brown_streak_disease/
+        - Cassava\_\_\_green_mottle/
+        - Cassava\_\_\_healthy/
+        - Cassava\_\_\_mosaic_disease/
     - Start training:
       - python model/train.py
     - Outputs are written to model/models/:
@@ -56,6 +58,7 @@ Quick Start
   - Open http://localhost:3000 and ensure the header shows “API Connected” once the backend is reachable.
 
 Testing Predictions
+
 - From the UI
   - Go to the Classify tab and upload a JPG/PNG image (< 10 MB). You’ll see the predicted disease, confidence, severity, and suggested actions.
 - With curl
@@ -65,6 +68,7 @@ Testing Predictions
     - curl -X POST http://localhost:8000/predict -F "file=@/path/to/leaf.jpg"
 
 Collecting Test Images
+
 - From local farmers
   - Capture clear images of individual leaves in good lighting. Avoid busy backgrounds; fill the frame with the leaf.
   - Ensure JPG or PNG format; file size < 10 MB.
@@ -76,6 +80,7 @@ Collecting Test Images
   - You can source cassava leaf images from public datasets or academic resources where permitted. Ensure images are legal to use and do not contain personal/identifying information.
 
 Project Structure
+
 - backend/
   - main.py — FastAPI app (endpoints: /health, /info, /predict, /analytics, export/clear history)
   - predictor.py — Loads FastAI model and performs inference
@@ -89,6 +94,7 @@ Project Structure
   - Training data (folder-per-class images) if training is performed locally
 
 API Reference
+
 - GET /health
   - Returns status and whether the model is loaded.
 - GET /info
@@ -103,6 +109,7 @@ API Reference
   - Clears the prediction history (admin caution).
 
 Troubleshooting
+
 - Frontend shows “Offline”
   - Ensure the backend is running on http://localhost:8000.
   - If your backend runs elsewhere, set NEXT_PUBLIC_API_URL to its URL before npm run dev.
@@ -119,11 +126,13 @@ Troubleshooting
   - The requirements install compatible torch builds by default. If you need CUDA builds, consult PyTorch’s official install instructions and reinstall torch/torchvision accordingly.
 
 Production Notes (Optional)
+
 - Backend: python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
 - Frontend: npm run build; npm start
 - Configure CORS origins in production and place the frontend URL in NEXT_PUBLIC_API_URL.
 
 Undergraduate Thesis — Remaining Chapters Guide
+
 - Assumption: Chapters 1–2 completed (e.g., Introduction and Literature Review). Below is a detailed scaffold for the remaining chapters with the information you should prepare and include.
 
 - Chapter 3 — Methodology
@@ -188,12 +197,14 @@ Undergraduate Thesis — Remaining Chapters Guide
   - Future work: larger and more diverse datasets, field trials, mobile app, on-device inference, calibration, active learning, and MLOps (CI/CD monitoring).
 
 Artifacts and Evidence to Include
+
 - Tables: class distribution, hyperparameters, per-class metrics.
 - Figures: model architecture diagram, system architecture diagram, training curves, confusion matrix, UI screenshots.
 - Listings: key API endpoints and usage examples, environment and version table.
 - Data sheets: describe data sources, consent process, anonymization steps.
 
 Reproducibility Checklist
+
 - Record environment:
   - Python, torch, fastai, timm, FastAPI, Node, Next.js versions.
 - Fix random seeds where possible (Python, NumPy, PyTorch, FastAI).
@@ -202,11 +213,12 @@ Reproducibility Checklist
 - Archive metrics.json, classes.json, and final model artifacts.
 
 Data Collection Guidance (Local Farmers)
+
 - Obtain informed consent; explain intended use and storage policies.
 - Capture leaves in good natural light, avoiding shadows and blur.
 - Prefer plain backgrounds and close-up framing of individual leaves.
 - Avoid personal identifiers; store images in well-labeled folders.
 
 License and Attribution
-- Ensure that any datasets and third-party images used comply with their licenses and data-use policies. Attribute appropriately in your thesis and repository.
 
+- Ensure that any datasets and third-party images used comply with their licenses and data-use policies. Attribute appropriately in your thesis and repository.
