@@ -45,9 +45,5 @@ out/
 data/
 *.zip
 backend/venv/
-backend/predictions.db
-model\models\phase1_checkpoint.pkl
-model\models\phase2_checkpoint.pkl
-model/models/*.pth
 frontend/.env.local.example
 frontend/node_modules/
