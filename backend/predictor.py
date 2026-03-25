@@ -72,18 +72,71 @@ class DiseasePredictor:
             raise
 
     def _load_model(self):
-        """Load FastAI learner from exported model"""
+        """Load FastAI learner from exported model with fallback to checkpoints"""
 
         model_path = self.model_dir / "model.pkl"
+        phase2_ckpt = self.model_dir / "phase2_checkpoint.pkl"
+        phase1_ckpt = self.model_dir / "phase1_checkpoint.pkl"
 
-        if not model_path.exists():
-            raise FileNotFoundError(
-                f"Model not found at {model_path}\n"
-                f"Please run: python model/train.py"
-            )
+        # Try 1: Load exported model (primary)
+        if model_path.exists():
+            try:
+                logger.info("Loading model.pkl...")
+                try:
+                    with open(model_path, "rb") as f:
+                        head = f.read(64)
+                        if b"git-lfs" in head:
+                            raise ValueError("Git LFS pointer detected for model.pkl. Run 'git lfs pull' or place the real file at model/models/model.pkl")
+                except Exception:
+                    pass
+                learn = load_learner(model_path)
+                logger.info("✓ Model loaded successfully")
+                return learn
+            except Exception as e:
+                logger.warning(f"Failed to load model.pkl: {e}")
+                logger.info("Attempting fallback to phase2_checkpoint.pkl...")
 
-        learn = load_learner(model_path)
-        return learn
+        # Try 2: Load phase2 checkpoint (best fine-tuned)
+        if phase2_ckpt.exists():
+            try:
+                logger.info("Loading phase2_checkpoint.pkl...")
+                try:
+                    with open(phase2_ckpt, "rb") as f:
+                        head = f.read(64)
+                        if b"git-lfs" in head:
+                            raise ValueError("Git LFS pointer detected for phase2_checkpoint.pkl. Run 'git lfs pull' or place the real file.")
+                except Exception:
+                    pass
+                learn = load_learner(phase2_ckpt)
+                logger.info("✓ Phase 2 checkpoint loaded successfully")
+                return learn
+            except Exception as e:
+                logger.warning(f"Failed to load phase2_checkpoint.pkl: {e}")
+                logger.info("Attempting fallback to phase1_checkpoint.pkl...")
+
+        # Try 3: Load phase1 checkpoint (initial training)
+        if phase1_ckpt.exists():
+            try:
+                logger.info("Loading phase1_checkpoint.pkl...")
+                try:
+                    with open(phase1_ckpt, "rb") as f:
+                        head = f.read(64)
+                        if b"git-lfs" in head:
+                            raise ValueError("Git LFS pointer detected for phase1_checkpoint.pkl. Run 'git lfs pull' or place the real file.")
+                except Exception:
+                    pass
+                learn = load_learner(phase1_ckpt)
+                logger.info("✓ Phase 1 checkpoint loaded successfully")
+                return learn
+            except Exception as e:
+                logger.warning(f"Failed to load phase1_checkpoint.pkl: {e}")
+
+        # No valid model files found
+        raise FileNotFoundError(
+            f"No valid model files found at {self.model_dir}\n"
+            f"Tried: model.pkl, phase2_checkpoint.pkl, phase1_checkpoint.pkl\n"
+            f"Please run: python model/train.py"
+        )
 
     def predict(self, image_stream):
         """
@@ -110,7 +163,8 @@ class DiseasePredictor:
                 image.load()
             except UnidentifiedImageError as e:
                 logger.error("Invalid image data")
-                raise ValueError("Unsupported or corrupted image. Please upload a valid JPG or PNG.") from e
+                raise ValueError(
+                    "Unsupported or corrupted image. Please upload a valid JPG or PNG.") from e
             if image.mode != 'RGB':
                 image = image.convert('RGB')
             img = PILImage.create(image)
@@ -143,7 +197,8 @@ class DiseasePredictor:
             return result
         except Exception as e:
             logger.exception("Prediction error")
-            raise ValueError(f"Failed to process image: {type(e).__name__}: {e}")
+            raise ValueError(
+                f"Failed to process image: {type(e).__name__}: {e}")
 
     def predict_batch(self, images):
         """

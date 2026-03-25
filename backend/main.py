@@ -255,6 +255,7 @@ async def export_predictions():
         logger.error(f"Export error: {e}")
         raise HTTPException(status_code=500, detail="Export failed")
 
+
 @app.get("/predictions/export.xlsx", tags=["Export"])
 async def export_predictions_xlsx():
     try:
@@ -269,7 +270,8 @@ async def export_predictions_xlsx():
         """)
         rows = cursor.fetchall()
         conn.close()
-        df = pd.DataFrame(rows, columns=["ID", "Disease", "Confidence", "Timestamp", "Image"])
+        df = pd.DataFrame(
+            rows, columns=["ID", "Disease", "Confidence", "Timestamp", "Image"])
         df["Confidence"] = df["Confidence"].round(4)
         buf = io.BytesIO()
         with pd.ExcelWriter(buf, engine="openpyxl") as writer:
@@ -278,11 +280,13 @@ async def export_predictions_xlsx():
         return StreamingResponse(
             buf,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": "attachment; filename=cassava-predictions.xlsx"},
+            headers={
+                "Content-Disposition": "attachment; filename=cassava-predictions.xlsx"},
         )
     except Exception as e:
         logger.error(f"XLSX export error: {e}")
         raise HTTPException(status_code=500, detail="XLSX export failed")
+
 
 @app.get("/predictions/export.pdf", tags=["Export"])
 async def export_predictions_pdf():
@@ -303,20 +307,22 @@ async def export_predictions_pdf():
         conn.close()
         data = [["ID", "Disease", "Confidence", "Timestamp", "Image"]]
         for r in rows:
-            data.append([r[0], r[1], f"{round(r[2]*100,1)}%", r[3], r[4] or ""])
+            data.append(
+                [r[0], r[1], f"{round(r[2]*100, 1)}%", r[3], r[4] or ""])
         buf = io.BytesIO()
-        doc = SimpleDocTemplate(buf, pagesize=landscape(letter), leftMargin=24, rightMargin=24, topMargin=24, bottomMargin=24)
+        doc = SimpleDocTemplate(buf, pagesize=landscape(
+            letter), leftMargin=24, rightMargin=24, topMargin=24, bottomMargin=24)
         styles = getSampleStyleSheet()
         title = Paragraph("Cassava Predictions Report", styles["Title"])
         tbl = Table(data, repeatRows=1)
         tbl.setStyle(TableStyle([
-            ("BACKGROUND", (0,0), (-1,-1), colors.white),
-            ("TEXTCOLOR", (0,0), (-1,-1), colors.black),
-            ("GRID", (0,0), (-1,-1), 0.5, colors.black),
-            ("FONTNAME", (0,0), (-1,-1), "Helvetica"),
-            ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-            ("FONTSIZE", (0,0), (-1,-1), 9),
-            ("ALIGN", (2,1), (2,-1), "RIGHT"),
+            ("BACKGROUND", (0, 0), (-1, -1), colors.white),
+            ("TEXTCOLOR", (0, 0), (-1, -1), colors.black),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+            ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("FONTSIZE", (0, 0), (-1, -1), 9),
+            ("ALIGN", (2, 1), (2, -1), "RIGHT"),
         ]))
         story = [title, Spacer(1, 12), tbl]
         doc.build(story)
@@ -324,11 +330,13 @@ async def export_predictions_pdf():
         return StreamingResponse(
             buf,
             media_type="application/pdf",
-            headers={"Content-Disposition": "attachment; filename=cassava-predictions.pdf"},
+            headers={
+                "Content-Disposition": "attachment; filename=cassava-predictions.pdf"},
         )
     except Exception as e:
         logger.error(f"PDF export error: {e}")
         raise HTTPException(status_code=500, detail="PDF export failed")
+
 
 @app.delete("/predictions/clear", tags=["Admin"])
 async def clear_predictions():
